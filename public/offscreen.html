@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Offscreen Document</title>
+</head>
+<body>
+  <script>
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type === 'COPY_TEXT' && message.target === 'offscreen') {
+        handleCopyText(message.text);
+        sendResponse({ success: true });
+      }
+    });
+
+    async function handleCopyText(text) {
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      } catch (error) {
+        console.error('Failed to copy text:', error);
+      }
+    }
+  </script>
+</body>
+</html>
