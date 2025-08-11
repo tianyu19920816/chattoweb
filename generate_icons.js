@@ -1,0 +1,94 @@
+import { createCanvas } from 'canvas';
+import fs from 'fs';
+
+const sizes = [16, 32, 48, 128];
+
+function drawIcon(ctx, size) {
+    const scale = size / 128;
+    
+    // 背景
+    ctx.fillStyle = '#4F46E5';
+    roundRect(ctx, 0, 0, size, size, 20 * scale);
+    ctx.fill();
+    
+    // 白色内框
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+    roundRect(ctx, 20 * scale, 20 * scale, 88 * scale, 88 * scale, 8 * scale);
+    ctx.fill();
+    
+    // 代码标签 < >
+    ctx.fillStyle = '#4F46E5';
+    ctx.font = `bold ${36 * scale}px monospace`;
+    ctx.fillText('<', 35 * scale, 70 * scale);
+    ctx.fillText('>', 78 * scale, 70 * scale);
+    
+    // 选择器/光标
+    ctx.save();
+    ctx.translate(58 * scale, 48 * scale);
+    
+    // 光标主体
+    ctx.fillStyle = '#10B981';
+    ctx.strokeStyle = '#059669';
+    ctx.lineWidth = 1 * scale;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, 32 * scale);
+    ctx.lineTo(8 * scale, 24 * scale);
+    ctx.lineTo(16 * scale, 36 * scale);
+    ctx.lineTo(20 * scale, 34 * scale);
+    ctx.lineTo(12 * scale, 22 * scale);
+    ctx.lineTo(22 * scale, 22 * scale);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // 选择效果圆圈
+    ctx.fillStyle = 'rgba(16, 185, 129, 0.3)';
+    ctx.beginPath();
+    ctx.arc(0, 0, 6 * scale, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.restore();
+    
+    // 提取的元素指示线
+    ctx.fillStyle = '#EF4444';
+    roundRect(ctx, 75 * scale, 78 * scale, 25 * scale, 3 * scale, 1.5 * scale);
+    ctx.fill();
+    
+    ctx.fillStyle = '#F59E0B';
+    roundRect(ctx, 75 * scale, 85 * scale, 20 * scale, 3 * scale, 1.5 * scale);
+    ctx.fill();
+    
+    ctx.fillStyle = '#10B981';
+    roundRect(ctx, 75 * scale, 92 * scale, 15 * scale, 3 * scale, 1.5 * scale);
+    ctx.fill();
+}
+
+function roundRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+}
+
+// 生成各个尺寸的图标
+sizes.forEach(size => {
+    const canvas = createCanvas(size, size);
+    const ctx = canvas.getContext('2d');
+    
+    drawIcon(ctx, size);
+    
+    // 保存为PNG
+    const buffer = canvas.toBuffer('image/png');
+    fs.writeFileSync(`public/icon-${size}.png`, buffer);
+    console.log(`Generated public/icon-${size}.png`);
+});
+
+console.log('All icons generated successfully!');

@@ -1,8 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Web Element Extractor",
-  "version": "0.1.0",
-  "description": "Extract web elements and generate AI-ready prompts",
+  "name": "Web Element Extractor - 网页元素提取器",
+  "version": "1.0.0",
+  "description": "智能提取网页元素，一键生成AI对话提示词，让AI更准确理解你的需求",
+  "author": "chattoweb",
+  "homepage_url": "https://github.com/tianyu19920816/chattoweb",
   "icons": {
     "16": "icon-16.png",
     "32": "icon-32.png",
